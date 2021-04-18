@@ -14,6 +14,13 @@ log.info """\
 params_ch=Channel
     .fromList(params.strings)
 
+def strip_suffix(Objext,path,suffix){
+
+    // removes all instance of a string given a path
+
+    path.replaceAll(path,suffix)
+}
+
 process rev_string{
     publishDir params.outdir, mode: 'copy', overwrite: true
 
@@ -35,12 +42,12 @@ process uppercase_string{
     each path(string) from rev_string_ch
 
     output:
-    file "${string}_upper.txt" into upper_ch
+    file "${string.toString().replaceAll(".txt","")}_upper.txt" into upper_ch
 
     script:
 
     """
-    cat $string | tr a-z A-Z >${string}_upper.txt
+    cat $string | tr a-z A-Z >${string.toString().replaceAll(".txt","")}_upper.txt
     """
 
 }
@@ -51,10 +58,10 @@ process split_string{
     each path(string) from upper_ch
 
     output:
-    file "${string}_splitbycomma.txt" into splitbycomma_ch
+    file "${string.toString().replaceAll(".txt","")}_splitbycomma.txt" into splitbycomma_ch
 
     script:
     """
-    split.py ${string} > ${string}_splitbycomma.txt
+    split.py ${string} > ${string.toString().replaceAll(".txt","")}_splitbycomma.txt
     """
 }
